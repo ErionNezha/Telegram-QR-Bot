@@ -1,0 +1,61 @@
+<!-- Created by Erion Nezha — © 2026 All rights reserved -->
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Bot — Demo</title>
+<script src="vendor/qrcode-generator.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#141e30,#243b55);min-height:100vh;color:#fff;display:flex;flex-direction:column;align-items:center;padding:24px}
+.card{background:#ffffff10;border:1px solid #ffffff22;border-radius:16px;padding:24px;max-width:520px;width:100%;text-align:center}
+h1{font-size:1.4rem;margin-bottom:4px}
+.sub{color:#9fb3c8;font-size:.85rem;margin-bottom:16px}
+.sim{background:#ffb30022;border:1px solid #ffb30066;color:#ffd75c;font-size:.78rem;border-radius:8px;padding:8px 12px;margin-bottom:16px;text-align:left}
+textarea{width:100%;min-height:90px;padding:12px;border-radius:10px;border:1px solid #ffffff33;background:#00000040;color:#fff;font-size:.95rem;resize:vertical;margin-bottom:12px}
+button{padding:12px 26px;border:none;border-radius:10px;background:#00d4ff;color:#04121a;font-weight:700;cursor:pointer;font-size:.95rem;margin-bottom:16px}
+button:hover{filter:brightness(1.1)}
+#qrwrap{display:inline-block;background:#fff;padding:14px;border-radius:12px;min-width:200px;min-height:200px}
+#qrwrap img,#qrwrap canvas,#qrwrap table{margin:0 auto}
+.hint{color:#5c6b7f;font-size:.8rem;margin-top:12px}
+footer{margin-top:20px;color:#5c6b7f;font-size:.8rem}
+footer strong{color:#9fb3c8}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🔳 QR Bot</h1>
+<div class="sub">Shkruaj tekstin — merr QR code-in menjëherë</div>
+<div class="sim">SIMULIM WEB — boti real Telegram kërkon token; gjenerimi këtu bëhet 100% lokalisht me qrcode-generator (UTF-8).</div>
+<textarea id="txt" placeholder="Shkruaj tekstin ose linkun këtu..." maxlength="500">Përshëndetje nga Erion Nezha!</textarea><br>
+<button onclick="makeQR()">⚡ Gjenero QR</button>
+<div><div id="qrwrap"><div id="qrcode"></div></div></div>
+<div class="hint">Skanoje me kamerën e telefonit për ta testuar.</div>
+</div>
+<footer>Krijuar nga <strong>Erion Nezha</strong> — © 2026</footer>
+<script>
+function makeQR(){
+  const t=document.getElementById('txt').value.trim()||' ';
+  const el=document.getElementById('qrcode');
+  el.innerHTML='';
+  // gjej versionin më të vogël QR që e nxë tekstin (UTF-8)
+  for(let tn=1; tn<=40; tn++){
+    try{
+      const qr=qrcode(tn,'M');
+      qr.addData(t);
+      qr.make();
+      el.innerHTML=qr.createImgTag(5,4);
+      const img=el.querySelector('img');
+      if(img){img.style.width='180px';img.style.height='180px';img.alt='QR code';}
+      return;
+    }catch(e){
+      if(tn===40){el.innerHTML='<div style="color:#c00;padding:20px">Teksti është shumë i gjatë për QR.</div>';}
+    }
+  }
+}
+makeQR();
+document.getElementById('txt').addEventListener('input',()=>{clearTimeout(window._qrt);window._qrt=setTimeout(makeQR,400);});
+</script>
+</body>
+</html>
